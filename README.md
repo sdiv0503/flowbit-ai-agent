@@ -81,7 +81,6 @@ flowbit-ai-agent/
 ## 📤 Output Contract
 
 Every processed invoice returns a structured JSON response:
-```json
 {
   "normalizedInvoice": { "...": "..." },
   "proposedCorrections": [ { "field": "...", "value": "...", "reason": "..." } ],
