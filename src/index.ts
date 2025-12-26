@@ -14,7 +14,6 @@ function printMemory() {
   }
 }
 
-console.log("\n🚀 PHASE 4 FINAL DEMO\n");
 
 // Reset memory manually if you want a clean demo (do it externally)
 // Show starting memory
