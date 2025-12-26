@@ -1,46 +1,58 @@
-# AI Memory-Based Invoice Processor
+# 🧠 AI Memory-Based Invoice Processor
+
+> A memory-driven invoice decision engine that learns from human corrections without machine learning
+
 **Author:** Divyansh Sharma  
 **Assignment:** AI Agent Development Intern — Flowbit
 
 ---
 
-## One-line summary
-A memory-driven invoice decision engine (TypeScript + Node.js) that **learns from human corrections** (no ML). It persists memory, applies vendor-specific corrections, tracks confidence, and auto-approves once confidence reaches a threshold.
+## 📋 Overview
+
+A TypeScript-based invoice processing system that **remembers and learns** from human corrections. The engine persists memory, applies vendor-specific rules, tracks confidence scores, and auto-approves invoices once confidence reaches a threshold—all without requiring ML training.
+
+### Why This Approach?
+
+Flowbit's assignment calls for an explainable, auditable system that **remembers** repeated human corrections and vendor patterns, reducing manual intervention over time. This project implements that vision using a rule-based memory system with confidence reinforcement and decay mechanisms.
 
 ---
 
-## Why this approach?   
-Flowbit's assignment asks for an explainable, auditable system that **remembers** repeated human corrections and vendor patterns so future invoices require fewer manual fixes. This project implements that using a small rule + memory system with confidence reinforcement and decay hooks (no ML training required).
+## ✨ Key Features
+
+- 💾 **Persistent Memory** — JSON-based storage for vendor, correction, and resolution entries
+- 🎯 **Decision Engine** — Recall → Apply → Decide → Learn pipeline
+- 🔒 **Confidence-Based Auto-Approval** — Configurable threshold system
+- 📊 **Explainable Decisions** — Full `reasoning` and `auditTrail` per invoice
+- 🔍 **Duplicate Detection** — Prevents contradictory learning
+- 🚀 **Live Demo Runner** — Shows learning progression across invoice batches
 
 ---
 
-## Key features
-- Persistent memory (JSON) for vendor, correction, and resolution entries  
-- Decision engine: recall → apply → decide → learn  
-- Confidence-based auto-approve (threshold configurable)  
-- Explainable `reasoning` and `auditTrail` per invoice  
-- Duplicate detection logic to avoid contradictory learning  
-- Demo runner that shows learning over time (Invoice #1 → human correction → Invoice #2 smarter)
+## 🏗️ Architecture
+
+[Invoice Input] --> [Decision Engine]
+                     /     |      \
+            [Recall]   [Apply]   [Duplicate Check]
+               |         |              |
+           memory.json  rules         memory.json
+               |         |              |
+             [Learning Engine] <--- Human Approval
+                    |
+                memory.json (persisted)
+
+
+### Processing Flow
+
+1. **Recall** — Loads past memories (vendor/correction/resolution)
+2. **Apply** — Executes heuristics and learned rules to generate corrections
+3. **Decide** — Uses confidence threshold to determine if human review is needed
+4. **Learn** — Updates memory when human approves corrections
+5. **Audit** — Logs each step for full explainability
 
 ---
 
-## Output contract (per invoice)
-Every invoice processed returns JSON with this structure:
+## 📁 Project Structure
 
-```json
-{
-  "normalizedInvoice": { "...": "..." },
-  "proposedCorrections": [ { "field": "...", "value": "...", "reason": "..." } ],
-  "requiresHumanReview": true,
-  "reasoning": "Explain why memory was applied and why actions were taken",
-  "confidenceScore": 0.0,
-  "memoryUpdates": [ "..." ],
-  "auditTrail": [
-    { "step": "recall|apply|decide|learn", "timestamp": "...", "details": "..." }
-  ]
-}
-
-Repository structure (what to expect)
 flowbit-ai-agent/
 ├── src/
 │   ├── data/
@@ -64,107 +76,117 @@ flowbit-ai-agent/
 ├── package.json
 ├── tsconfig.json
 └── README.md                       # this file
+---
 
-Architecture (ASCII diagram)
-[Invoice Input] --> [Decision Engine]
-                     /     |      \
-            [Recall]   [Apply]   [Duplicate Check]
-               |         |              |
-           memory.json  rules         memory.json
-               |         |              |
-             [Learning Engine] <--- Human Approval
-                    |
-                memory.json (persisted)
+## 📤 Output Contract
+
+Every processed invoice returns a structured JSON response:
+```json
+{
+  "normalizedInvoice": { "...": "..." },
+  "proposedCorrections": [ { "field": "...", "value": "...", "reason": "..." } ],
+  "requiresHumanReview": true,
+  "reasoning": "Explain why memory was applied and why actions were taken",
+  "confidenceScore": 0.0,
+  "memoryUpdates": [ "..." ],
+  "auditTrail": [
+    { "step": "recall|apply|decide|learn", "timestamp": "...", "details": "..." }
+  ]
+}
 
 
-Flow:
+---
+## 🚀 Getting Started
 
-Recall loads past memories (vendor/correction/resolution).
+### Prerequisites
 
-Apply executes heuristics and learned rules to produce proposedCorrections and a confidence score.
+- Node.js 16+ 
+- npm or yarn
 
-Decide uses threshold (default 0.8) to auto-approve or require human review.
-
-Learn runs when human approves and updates memory with reinforcement and persistence.
-
-Audit trail logs each step (recall, apply, decide, learn) for explainability.
-
-Configurable parameters
-
-AUTO_APPROVE_THRESHOLD = 0.8 — invoices with confidence >= threshold auto-approved.
-
-INITIAL_LEARNED_CONFIDENCE = 0.8 — initial confidence for a new human-approved memory.
-
-REINFORCE_STEP = 0.1 — confidence increment on repeat approved usage.
-These are set in the learningEngine / decisionEngine and are easy to change.
-
-Installation (exact steps)
-
-1. Clone repo (or put files into a folder):
+### Installation
+Clone the repository
 git clone https://github.com/sdiv0503/flowbit-ai-agent.git
 cd flowbit-ai-agent
-2. Install dependencies:
+
+Install dependencies
 npm install
-(The project uses ts-node for quick running; TypeScript is in dev deps.)
 
-Important: reset runtime memory (recommended before demo)
+### Reset Memory (Recommended Before Demo)
 
-The engine persists runtime memory to data/memory.json. For a clean demo, reset it:
-
-macOS / Linux:
+**macOS / Linux:**
 rm -f data/memory.json
 echo '{"vendors":[],"corrections":[],"resolutions":[]}' > data/memory.json
 
-Windows PowerShell:
+**Windows PowerShell:**
 Remove-Item data\memory.json -ErrorAction SilentlyContinue
 Set-Content -Path data\memory.json -Value '{"vendors":[],"corrections":[],"resolutions":[]}'
 
-Note: data/memory.json is in .gitignore — you will not commit runtime memory by default.
+> **Note:** `data/memory.json` is gitignored and won't be committed
 
-Demo (exact commands and expected flow)
+---
 
-Reset the memory (see previous section).
-
-Run the demo runner:
+## 🎬 Running the Demo
 
 npx ts-node src/index.ts
 
 
-The demo script runs three main steps:
+### Demo Flow
 
-First run: processes INV-A-001, proposes correction for serviceDate, returns confidenceScore: 0.7 and requiresHumanReview: true.
+The demo script demonstrates the learning process across three stages:
 
-Simulated human approval: the demo calls the learning routine and writes the learned correction to data/memory.json with confidence: 0.8.
+1. **First Run** — Processes `INV-A-001`, proposes correction, returns `confidenceScore: 0.7` and `requiresHumanReview: true`
 
-Second run: processes the same vendor invoice again and now confidenceScore: 0.8 (>= threshold) so requiresHumanReview: false and the correction is auto-applied.
+2. **Human Approval** — Simulates approval, updates memory with `confidence: 0.8`
 
-Example expected outputs (snippets)
+3. **Second Run** — Processes same vendor, achieves `confidenceScore: 0.8`, auto-approves with `requiresHumanReview: false`
 
-First run (before learning):
+### Expected Output Examples
 
+**Before Learning:**
 {
-  "proposedCorrections": [
-    {
-      "field": "serviceDate",
-      "value": "2024-01-01",
-      "reason": "Detected Leistungsdatum in raw text"
-    }
-  ],
-  "requiresHumanReview": true,
-  "confidenceScore": 0.7
+"proposedCorrections": [
+{
+"field": "serviceDate",
+"value": "2024-01-01",
+"reason": "Detected Leistungsdatum in raw text"
+}
+],
+"requiresHumanReview": true,
+"confidenceScore": 0.7
 }
 
-
-After human approval & second run:
-
+**After Learning:**
 {
-  "proposedCorrections": [
-    {
-      "field": "serviceDate",
-      "value": "2024-01-01",
-      "reason": "Detected Leistungsdatum in raw text"
-    }
-  ],
-  "requiresHumanReview": false,
-  "confidenceScore": 0.8
+"proposedCorrections": [
+{
+"field": "serviceDate",
+"value": "2024-01-01",
+"reason": "Detected Leistungsdatum in raw text"
 }
+],
+"requiresHumanReview": false,
+"confidenceScore": 0.8
+}
+
+---
+
+## 🔍 Key Design Decisions
+
+- **No ML Required** — Pure rule-based system with memory reinforcement
+- **Explainable AI** — Every decision includes reasoning and audit trail
+- **Confidence Scoring** — Gradual trust building through repeated approvals
+- **Duplicate Prevention** — Avoids learning conflicting patterns
+- **JSON Persistence** — Simple, readable memory storage
+
+---
+
+## 👤 Contact
+
+**Divyansh Sharma**  
+GitHub: [@sdiv0503](https://github.com/sdiv0503)
+E-Mail: [sdivyansh0503@gmail.com]
+
+---
+
+<p align="center">Built with ❤️ for Flowbit AI Agent Assignment</p>
+
