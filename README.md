@@ -28,19 +28,6 @@ Flowbit's assignment calls for an explainable, auditable system that **remembers
 
 ---
 
-## 🏗️ Architecture
-
-[Invoice Input] --> [Decision Engine]
-                     /     |      \
-            [Recall]   [Apply]   [Duplicate Check]
-               |         |              |
-           memory.json  rules         memory.json
-               |         |              |
-             [Learning Engine] <--- Human Approval
-                    |
-                memory.json (persisted)
-
-
 ### Processing Flow
 
 1. **Recall** — Loads past memories (vendor/correction/resolution)
@@ -55,45 +42,27 @@ Flowbit's assignment calls for an explainable, auditable system that **remembers
 
 flowbit-ai-agent/
 ├── src/
-│   ├── data/
-│   │   └── invoices.ts            # sample invoices used in demo
-│   ├── engine/
-│   │   ├── applyEngine.ts
-│   │   ├── recallEngine.ts
-│   │   ├── decisionEngine.ts
-│   │   ├── learningEngine.ts
-│   │   └── duplicateEngine.ts
-│   ├── memory/
-│   │   ├── memoryStore.ts
-│   │   ├── vendorMemory.ts
-│   │   ├── correctionMemory.ts
-│   │   └── resolutionMemory.ts
-│   ├── models/
-│   │   └── types.ts
-│   └── index.ts                   # demo runner (first-run -> approve -> second-run)
+│ ├── data/
+│ │ └── invoices.ts # Sample invoices for demo
+│ ├── engine/
+│ │ ├── applyEngine.ts # Applies corrections and rules
+│ │ ├── recallEngine.ts # Retrieves relevant memories
+│ │ ├── decisionEngine.ts # Makes approval decisions
+│ │ ├── learningEngine.ts # Updates memory from feedback
+│ │ └── duplicateEngine.ts # Prevents conflicting entries
+│ ├── memory/
+│ │ ├── memoryStore.ts # Core memory persistence
+│ │ ├── vendorMemory.ts # Vendor-specific patterns
+│ │ ├── correctionMemory.ts # Field correction history
+│ │ └── resolutionMemory.ts # Resolution tracking
+│ ├── models/
+│ │ └── types.ts # TypeScript interfaces
+│ └── index.ts # Demo runner
 ├── data/
-│   └── memory.json                 # runtime memory (ignored by git)
+│ └── memory.json # Runtime memory (gitignored)
 ├── package.json
 ├── tsconfig.json
-└── README.md                       # this file
----
-
-## 📤 Output Contract
-
-Every processed invoice returns a structured JSON response:
-{
-  "normalizedInvoice": { "...": "..." },
-  "proposedCorrections": [ { "field": "...", "value": "...", "reason": "..." } ],
-  "requiresHumanReview": true,
-  "reasoning": "Explain why memory was applied and why actions were taken",
-  "confidenceScore": 0.0,
-  "memoryUpdates": [ "..." ],
-  "auditTrail": [
-    { "step": "recall|apply|decide|learn", "timestamp": "...", "details": "..." }
-  ]
-}
-
-
+└── README.md
 ---
 ## 🚀 Getting Started
 
@@ -183,7 +152,8 @@ The demo script demonstrates the learning process across three stages:
 
 **Divyansh Sharma**  
 GitHub: [@sdiv0503](https://github.com/sdiv0503)
-E-Mail: [sdivyansh0503@gmail.com]
+
+E-Mail: sdivyansh0503@gmail.com
 
 ---
 
