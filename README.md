@@ -38,32 +38,6 @@ Flowbit's assignment calls for an explainable, auditable system that **remembers
 
 ---
 
-## 📁 Project Structure
-
-flowbit-ai-agent/
-├── src/
-│ ├── data/
-│ │ └── invoices.ts # Sample invoices for demo
-│ ├── engine/
-│ │ ├── applyEngine.ts # Applies corrections and rules
-│ │ ├── recallEngine.ts # Retrieves relevant memories
-│ │ ├── decisionEngine.ts # Makes approval decisions
-│ │ ├── learningEngine.ts # Updates memory from feedback
-│ │ └── duplicateEngine.ts # Prevents conflicting entries
-│ ├── memory/
-│ │ ├── memoryStore.ts # Core memory persistence
-│ │ ├── vendorMemory.ts # Vendor-specific patterns
-│ │ ├── correctionMemory.ts # Field correction history
-│ │ └── resolutionMemory.ts # Resolution tracking
-│ ├── models/
-│ │ └── types.ts # TypeScript interfaces
-│ └── index.ts # Demo runner
-├── data/
-│ └── memory.json # Runtime memory (gitignored)
-├── package.json
-├── tsconfig.json
-└── README.md
----
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -73,11 +47,16 @@ flowbit-ai-agent/
 
 ### Installation
 Clone the repository
+
 git clone https://github.com/sdiv0503/flowbit-ai-agent.git
+
 cd flowbit-ai-agent
 
+
 Install dependencies
+
 npm install
+
 
 ### Reset Memory (Recommended Before Demo)
 
